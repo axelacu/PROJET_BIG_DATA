@@ -103,7 +103,7 @@ if __name__ == "__main__":
     conf = SparkConf().setAppName('exercice')
     sc = SparkContext(conf=conf)
 
-    lines = sc.textFile("hdfs:/user/user87/iris-test/iris.data.txt")
+    lines = sc.textFile("hdfs:/user/user87/projet-bd/data/iris/iris.data.txt")
     data = lines.map(lambda x: x.split(','))\
             .map(lambda x: [float(i) for i in x[:4]]+[x[4]])\
             .zipWithIndex()\
@@ -113,9 +113,9 @@ if __name__ == "__main__":
 
     clustering = simpleKmeans(data,3)
 
-   # clustering[0].saveAsTextFile("hdfs:/user/user87/iris-test/output_2")
+    clustering[0].saveAsTextFile("hdfs:/user/user87/projet-bd/output/iris/iris-many-files-2")
     
     # if you want to have only 1 file as a result, then:
-    clustering[0].coalesce(1).saveAsTextFile("hdfs:/user/user87/iris-test/sortie_2")
+    #clustering[0].coalesce(1).saveAsTextFile("hdfs:/user/user87/projet-bd/output/iris/iris-many-files")
 
     print(clustering)
