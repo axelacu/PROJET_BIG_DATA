@@ -1,4 +1,4 @@
-start7=$(date +%s.%N)
+start7=$(date +%s)
 spark-submit \
 --master yarn --deploy-mode cluster \
 --executor-cores 4 \
@@ -9,7 +9,6 @@ spark-submit \
 --conf spark.driver.cores=1 \
 --conf spark.yarn.jars="file:///home/cluster/shared/spark/jars/*.jar" \
 $HOME_CLUST/python/kmeans-dario-55-steps.py
-end7=$(date +%s.%N)
+end7=$(date +%s)
 
-runtime7=$((end7 - start7))
-runtime7>time_55_steps.txt
+python -c "print('temps exec : ' + str(${end7} - ${start7}) + 's')" >./logs/time_55_steps.txt
