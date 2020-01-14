@@ -96,14 +96,17 @@ def simpleKmeans(data, nb_clusters):
             number_of_steps += 1
 
     return (assignment, error, number_of_steps)
-
+path_source_local = "file:////home/acuna/Projets/PROJET_BIG_DATA/Repository/data/iris/iris.data.txt"
+path_source_dfs = "hdfs:/user/user87/projet-bd/data/iris/iris.data.txt"
+path_dest_local = "file:////home/acuna/Projets/PROJET_BIG_DATA/Repository/output-local-test"
+path_dest_dfs = "hdfs:/user/user87/projet-bd/output/iris/iris_one_file"
 
 if __name__ == "__main__":
 
     conf = SparkConf().setAppName('exercice')
     sc = SparkContext(conf=conf)
 
-    lines = sc.textFile("hdfs:/user/user87/projet-bd/data/iris/iris.data.txt")
+    lines = sc.textFile(path_source_dfs)
     data = lines.map(lambda x: x.split(','))\
             .map(lambda x: [float(i) for i in x[:4]]+[x[4]])\
             .zipWithIndex()\
@@ -116,6 +119,6 @@ if __name__ == "__main__":
    # clustering[0].saveAsTextFile("hdfs:/user/user87/iris-test/output_2")
     
     # if you want to have only 1 file as a result, then:
-    clustering[0].coalesce(1).saveAsTextFile("hdfs:/user/user87/projet-bd/output/iris/iris-one-file")
+    clustering[0].coalesce(1).saveAsTextFile(path_dest_dfs)
 
     print(clustering)
