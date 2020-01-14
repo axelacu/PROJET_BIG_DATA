@@ -87,7 +87,7 @@ def simpleKmeans(data, nb_clusters):
             switch = prev_assignment.join(min_dist).filter(lambda x: x[1][0][0] != x[1][1][0]).count()
         else:
             switch = 150
-        if switch == 0 or number_of_steps == 10:
+        if switch == 0 or number_of_steps == 40:
             clusteringDone = True
             error = sqrt(min_dist.map(lambda x: x[1][1]).reduce(lambda x,y: x + y))/nb_elem.value
         else:
@@ -100,7 +100,7 @@ def simpleKmeans(data, nb_clusters):
 path_source_local = "file:////home/acuna/Projets/PROJET_BIG_DATA/Repository/data/iris/iris.data.txt"
 path_source_dfs = "hdfs:/user/user87/projet-bd/data/iris/iris.data.txt"
 path_dest_local = "file:////home/acuna/Projets/PROJET_BIG_DATA/Repository/output-local-test"
-path_dest_dfs = "hdfs:/user/user87/projet-bd/output/iris/iris-many-10-steps"
+path_dest_dfs = "hdfs:/user/user87/projet-bd/output/iris/iris-many-40-steps"
 
 if __name__ == "__main__":
 
@@ -116,7 +116,7 @@ if __name__ == "__main__":
     # (0, [5.1, 3.5, 1.4, 0.2, 'Iris-setosa'])
 
     clustering = simpleKmeans(data,3)
-    print (clusturing[1],clusturing[2])
+
     clustering[0].saveAsTextFile(path_dest_dfs)
     
     # if you want to have only 1 file as a result, then:

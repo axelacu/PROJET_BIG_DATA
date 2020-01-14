@@ -116,7 +116,6 @@ if __name__ == "__main__":
     # (0, [5.1, 3.5, 1.4, 0.2, 'Iris-setosa'])
 
     clustering = simpleKmeans(data,3)
-    print (clusturing[1],clusturing[2])
     clustering[0].saveAsTextFile(path_dest_dfs)
     
     # if you want to have only 1 file as a result, then:
