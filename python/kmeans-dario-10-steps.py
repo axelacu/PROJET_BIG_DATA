@@ -3,6 +3,7 @@
 
 from pyspark import SparkContext, SparkConf
 from math import sqrt
+import time
 
 def computeDistance(x,y):
     return sqrt(sum([(a - b)**2 for a,b in zip(x,y)]))
@@ -42,7 +43,7 @@ def simpleKmeans(data, nb_clusters):
     # In the same manner, zipWithIndex gives an id to each cluster
 
     while not clusteringDone:
-
+        start = time.time()
         #############################
         # Assign points to clusters #
         #############################
@@ -90,10 +91,17 @@ def simpleKmeans(data, nb_clusters):
         if switch == 0 or number_of_steps == 10:
             clusteringDone = True
             error = sqrt(min_dist.map(lambda x: x[1][1]).reduce(lambda x,y: x + y))/nb_elem.value
+            end = time.time()
+            time_taken = end - start
+            print('Time last iter  ', number_of_steps, ' : ', time_taken)
         else:
             centroides = centroidesCluster
             prev_assignment = min_dist
+            end = time.time()
+            time_taken = end - start
+            print('Time iteration numero  ', number_of_steps, ' : ', time_taken)
             number_of_steps += 1
+
 
     return (assignment, error, number_of_steps)
 

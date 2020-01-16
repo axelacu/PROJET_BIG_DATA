@@ -35,9 +35,7 @@ def simpleKmeans(data, nb_clusters):
     # Select initial centroides #
     #############################
 
-    centroides = sc.parallelize(data.takeSample('withoutReplacment',nb_clusters))\
-              .zipWithIndex()\
-              .map(lambda x: (x[1],x[0][1][:-1]))
+    centroides = sc.parallelize(data.takeSample('withoutReplacment',nb_clusters)).zipWithIndex().map(lambda x: (x[1],x[0][1][:-1]))
     # (0, [4.4, 3.0, 1.3, 0.2])
     # In the same manner, zipWithIndex gives an id to each cluster
 
