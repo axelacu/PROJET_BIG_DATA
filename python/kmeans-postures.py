@@ -161,7 +161,7 @@ if __name__ == "__main__":
 
     sc = SparkContext(conf=conf)
 
-    lines = sc.textFile(path_source_local)
+    lines = sc.textFile(path_source_dfs)
     header =lines.first()
     #enlever le header
     lines = lines.filter(lambda x: x != header)
@@ -170,7 +170,7 @@ if __name__ == "__main__":
     # (0, [5.1, 3.5, 1.4, 0.2, 'Iris-setosa'])
 
     clustering = simpleKmeans(data, 3, num_of_partition, part, hpart)
-    clustering[0].saveAsTextFile(path_dest_local)
+    clustering[0].saveAsTextFile(path_dest_dfs)
 
     # if you want to have only 1 file as a result, then:
     # clustering[0].coalesce(1).saveAsTextFile("hdfs:/user/user87/projet-bd/output/iris/iris-many-files")
