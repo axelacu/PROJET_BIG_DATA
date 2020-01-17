@@ -44,7 +44,7 @@ def fixer_rdd(rdd,num_of_partition,cache =True, part = False ,hpart = False,):
     rdd = rdd if not hpart else rdd.partitionBy(num_of_partition)
     rdd = rdd if not cache else rdd.cache()
     return rdd
-def simpleKmeans(data, nb_clusters, num_of_partition=4,part=False,hpart=True):
+def simpleKmeans(data, nb_clusters, num_of_partition=4,part=False,hpart=False):
     clusteringDone = False
     number_of_steps = 0
     current_error = float("inf")
@@ -139,8 +139,9 @@ path_dest_local = "file:////home/acuna/Projets/PROJET_BIG_DATA/Repository/output
 path_dest_dfs = "hdfs:/user/user87/projet-bd/output/iris/iris-many-optimize-best"
 
 if __name__ == "__main__":
-    num_of_partition = 4
-    part=True
+    num_of_partition = 12
+    part=False
+    hpart=True
     #conf 1
     #conf = SparkConf().set("spark.default.parallelism", num_of_partition).setAppName('exercice')
     #conf 2
@@ -156,7 +157,7 @@ if __name__ == "__main__":
     # zipWithIndex allows us to give a specific index to each point
     # (0, [5.1, 3.5, 1.4, 0.2, 'Iris-setosa'])
 
-    clustering = simpleKmeans(data,3,num_of_partition,part)
+    clustering = simpleKmeans(data,3,num_of_partition,part,hpart)
     clustering[0].saveAsTextFile(path_dest_dfs)
     
     # if you want to have only 1 file as a result, then:

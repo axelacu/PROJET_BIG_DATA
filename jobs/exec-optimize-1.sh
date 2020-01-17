@@ -11,4 +11,4 @@ spark-submit \
 $HOME_CLUST/python/kmeans-optimize-1.py
 end7=$(date +%s)
 
-python -c "print('temps exec : ' + str(${end7} - ${start7}) + 's')" >./logs/time_55_steps.txt
+python -c "print('temps exec : ' + str(${end7} - ${start7}) + 's')" >./logs/time_best_optimization.txt
