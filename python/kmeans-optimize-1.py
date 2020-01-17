@@ -71,7 +71,6 @@ def simpleKmeans(data, nb_clusters, num_of_partition=4,part=False,hpart=False):
         #############################
 
         joined = data.cartesian(centroides)
-        joined = fixer_rdd(joined, num_of_partition, part, hpart)
         # ((0, [5.1, 3.5, 1.4, 0.2, 'Iris-setosa']), (0, [4.4, 3.0, 1.3, 0.2]))
 
         # We compute the distance between the points and each cluster
@@ -79,7 +78,6 @@ def simpleKmeans(data, nb_clusters, num_of_partition=4,part=False,hpart=False):
         # (0, (0, 0.866025403784438))
 
         dist_list = dist.groupByKey().mapValues(list)
-        dist_list = fixer_rdd(dist_list, num_of_partition, part, hpart)
         # (0, [(0, 0.866025403784438), (1, 3.7), (2, 0.5385164807134504)])
 
         # We keep only the closest cluster to each point.
@@ -89,7 +87,6 @@ def simpleKmeans(data, nb_clusters, num_of_partition=4,part=False,hpart=False):
         # assignment will be our return value : It contains the datapoint,
         # the id of the closest cluster and the distance of the point to the centroid
         assignment = min_dist.join(data,num_of_partition) if part else min_dist.join(data)
-        assignment = fixer_rdd(assignment, num_of_partition, part, hpart)
 
         # (0, ((2, 0.5385164807134504), [5.1, 3.5, 1.4, 0.2, 'Iris-setosa']))
 
@@ -102,9 +99,7 @@ def simpleKmeans(data, nb_clusters, num_of_partition=4,part=False,hpart=False):
 
         count = clusters.map(lambda x: (x[0],1)).reduceByKey(lambda x,y: x+y)
         somme = clusters.reduceByKey(sumList)
-        somme = fixer_rdd(somme, num_of_partition, part, hpart)
         centroidesCluster = somme.join(count).map(lambda x : (x[0],moyenneList(x[1][0],x[1][1])))
-        centroidesCluster = fixer_rdd(centroidesCluster, num_of_partition, part, hpart)
 
         ############################
         # Is the clustering over ? #
@@ -113,6 +108,12 @@ def simpleKmeans(data, nb_clusters, num_of_partition=4,part=False,hpart=False):
         # Let's see how many points have switched clusters.
         if number_of_steps > 0:
             switch = prev_assignment.join(min_dist).filter(lambda x: x[1][0][0] != x[1][1][0]).count()
+            'Fixing partition rdd'
+            joined = fixer_rdd(joined, num_of_partition, part, hpart)
+            dist_list = fixer_rdd(dist_list, num_of_partition, part, hpart)
+            assignment = fixer_rdd(assignment, num_of_partition, part, hpart)
+            somme = fixer_rdd(somme, num_of_partition, part, hpart)
+            centroidesCluster = fixer_rdd(centroidesCluster, num_of_partition, part, hpart)
         else:
             switch = 150
         if switch == 0 or number_of_steps == 100:
@@ -140,7 +141,7 @@ path_dest_dfs = "hdfs:/user/user87/projet-bd/output/iris/iris-many-optimize-best
 
 if __name__ == "__main__":
     num_of_partition = 12
-    part=False
+    part=True
     hpart=True
     #conf 1
     #conf = SparkConf().set("spark.default.parallelism", num_of_partition).setAppName('exercice')
